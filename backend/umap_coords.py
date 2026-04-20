@@ -1,7 +1,7 @@
-import numpy as mp
+import numpy as np
 from umap import UMAP
 
-_reducer = UMAP(n_component=2, random_state=42)
+_reducer = UMAP(n_components=2, random_state=42)
 _fitted = False
 
 def fit_transform(vectors: list[list[float]]) -> list[tuple[float, float]]:

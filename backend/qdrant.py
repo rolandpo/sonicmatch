@@ -7,7 +7,7 @@ VECTOR_SIZE = 40
 
 client = QdrantClient(host="localhost", port=6333)
 
-def init_collections():
+def init_collection():
   existing = [c.name for c in client.get_collections().collections]
   if COLLECTION not in existing:
     client.create_collection(
@@ -32,12 +32,14 @@ def get_all_songs() -> list[dict]:
   return [{"id": r.id, "title": r.payload["title"], "filename": r.payload["filename"], "vector": r.vector} for r in results]
 
 def recommend(song_id: str, limit: int = 5) -> list[dict]:
-  results = client.recommend(
+  results = client.query_points(
     collection_name=COLLECTION,
-    positive=[song_id],
-    limit=limit
+    query=song_id,
+    limit=limit + 1
   )
-  return [{"id": r.id, "score": r.score, **r.payload} for r in results]
+  return [
+    {"id": str(r.id), "score": r.score, **r.payload} for r in results.points if str(r.id) != song_id
+  ][:limit]
 
 def recommend_by_vector(vector: list[float], limit: int = 5) -> list[dict]:
   results = client.search(

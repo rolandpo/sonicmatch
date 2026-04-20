@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import ScatterPlot from "@/components/ScatterPlot"
 import SongList from "@/components/SongList"
 
@@ -37,9 +38,14 @@ export default function Home() {
     setRecommendations(data)
   }
 
+  console.log(recommendations)
+
   return (
     <main className="p-8">
       <h1 className="text-3xl font-bold mb-6">SonicMatch</h1>
+      <Link href="/upload" className="text-indigo-400 hover:text-indigo-300 text-sm">
+        Upload songs
+      </Link>
       <div className="mb-8">
         <ScatterPlot
           songs={songs}

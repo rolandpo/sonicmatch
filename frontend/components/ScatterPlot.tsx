@@ -1,7 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import type { PlotMouseEvent } from "plotly.js"
+import Plotly, { type PlotMouseEvent } from "plotly.js"
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false })
 
@@ -34,34 +34,34 @@ export default function ScatterPlot({ songs, recommendations, onSelect}: Props) 
 
   return (
     <Plot
-    data={[
-      {
-        type: "scatter",
-        mode: "markers",
-        x: normal.map((s) => s.x),
-        y: normal.map((s) => s.y),
-        text: normal.map((s) => s.y),
-        marker: { color: "#6366f1", size: 8 },
-        hovetemplate: "%{text}<extra></extra>",
-        customdata: normal
-      },
-      {
-        type: "scatter",
-        mode: "markers",
-        x: highlighted.map((s) => s.x),
-        y: highlighted.map((s) => s.y),
-        text: highlighted.map((s) => s.title),
-        marker: { color: "3f43f5e", size: 10 },
-        hovertemplate: "%{text}<extra></extra>",
-        customdata: highlighted
-      }
-    ]}
+      data={[
+        {
+          type: "scatter",
+          mode: "markers",
+          x: normal.map((s) => s.x) as unknown as Plotly.Datum[],
+          y: normal.map((s) => s.y) as unknown as Plotly.Datum[],
+          text: normal.map((s) => s.title),
+          marker: { color: "#6366f1", size: 8 },
+          hovertemplate: "%{text}<extra></extra>",
+          customdata: normal as unknown as Plotly.Datum[]
+        },
+        {
+          type: "scatter",
+          mode: "markers",
+          x: highlighted.map((s) => s.x) as unknown as Plotly.Datum[],
+          y: highlighted.map((s) => s.y) as unknown as Plotly.Datum[],
+          text: highlighted.map((s) => s.title),
+          marker: { color: "#3f43f5e", size: 10 },
+          hovertemplate: "%{text}<extra></extra>",
+          customdata: highlighted as unknown as Plotly.Datum[]
+        }
+      ]}
     layout={{
       paper_bgcolor: "transparant",
-      plot_bgcolor: "transaprant",
+      plot_bgcolor: "transparant",
       font: { color: "white" },
-      showLegend: false,
-      xaxis: { showgrid: false, zeroline: false, showticklebals: false },
+      showlegend: false,
+      xaxis: { showgrid: false, zeroline: false, showticklabels: false },
       yaxis: { showgrid: false, zeroline: false, showticklabels: false },
       margin: { t: 0, r: 0, b: 0, l: 0 }
     }}

@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
 from models import SongWithVector, Recommendation
-import umap as umap_module
+import umap_coords
 
 import audio
 import embeddings
@@ -14,19 +14,19 @@ import qdrant
 AUDIO_DIR = Path("audio_files")
 AUDIO_DIR.mkdir(exist_ok=True)
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+  qdrant.init_collection()
+  yield
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
   CORSMiddleware,
   allow_origins=["http://localhost:3000"],
   allow_methods=["*"],
-  allow_header=["*"]
+  allow_headers=["*"]
 )
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-  qdrant.init_collection()
-  yield
 
 @app.get("/songs")
 def get_songs():
@@ -35,7 +35,7 @@ def get_songs():
     return [{"id": s["id"], "title": s["title"], "filename": s["filename"], "x": 0.0, "y": 0.0} for s in songs]
   
   vectors = [s["vector"] for s in songs]
-  coords = umap_module.fit_transform(vectors)
+  coords = umap_coords.fit_transform(vectors)
 
   return [
     {"id": s["id"], "title": s["title"], "filename": s["filename"], "x": coords[i][0], "y": coords[i][1]} for i, s in enumerate(songs)
