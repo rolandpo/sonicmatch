@@ -1,5 +1,6 @@
 **SonicMatch** is a music recommendation app that find sonically similar songs. Users uploads MP3 files through an interface and the app recommends 5 similar songs based on their Mel-frequency cepstral coefficients (MFCC).
 
+
 **stack**
 
 fastapi — web framework for api endpoints                          
@@ -10,6 +11,7 @@ scikit-learn — PCA and StandardScaler
 numpy — array math, used throughout the pipeline
 joblib — saves/loads the fitted PCA model to disk
 python-multipart — lets FastAPI parse file uploads (MP3s)
+
 
 **audio processing**
 
@@ -23,11 +25,13 @@ mean - average texture
 
 std - standard deviation, variance over time
 
+
 **embedding**
 
 transform - normalises and applies pca to reduce 80d vector to 40d vector, converts 1d array to 2d row
 
 fit_and_save - takes a list of 80d vectors, fits scaler and pca, saves to disk and caches in memory
+
 
 **run qdrant in docker**
 ```docker compose up```
